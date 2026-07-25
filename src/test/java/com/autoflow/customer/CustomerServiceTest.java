@@ -7,9 +7,11 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.autoflow.common.exception.InvalidOperationException;
 import com.autoflow.common.exception.ResourceNotFoundException;
 import com.autoflow.customer.dto.CreateCustomerRequest;
 import com.autoflow.customer.dto.CustomerResponse;
+import com.autoflow.vehicle.VehicleRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,6 +29,9 @@ class CustomerServiceTest {
 
     @Mock
     private CustomerRepository customerRepository;
+
+    @Mock
+    private VehicleRepository vehicleRepository;
 
     @Spy
     private CustomerMapper customerMapper;
@@ -69,6 +74,20 @@ class CustomerServiceTest {
 
         assertThatThrownBy(() -> customerService.deleteCustomer(5L))
                 .isInstanceOf(ResourceNotFoundException.class);
+
+        verify(customerRepository, never()).delete(any(Customer.class));
+    }
+
+    @Test
+    void deleteCustomer_whenOwnsVehicles_throwsInvalidOperation() {
+        Customer customer = new Customer();
+        customer.setId(3L);
+        when(customerRepository.findById(3L)).thenReturn(Optional.of(customer));
+        when(vehicleRepository.existsByCustomerId(3L)).thenReturn(true);
+
+        assertThatThrownBy(() -> customerService.deleteCustomer(3L))
+                .isInstanceOf(InvalidOperationException.class)
+                .hasMessageContaining("vehicles");
 
         verify(customerRepository, never()).delete(any(Customer.class));
     }

@@ -67,3 +67,15 @@ export function CloseIcon(props: IconProps) {
     </svg>
   );
 }
+
+export function CarIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M5 17H3v-5l2-5h14l2 5v5h-2" />
+      <path d="M7 17h10" />
+      <circle cx="7.5" cy="17.5" r="1.5" />
+      <circle cx="16.5" cy="17.5" r="1.5" />
+      <path d="M5 12h14" />
+    </svg>
+  );
+}

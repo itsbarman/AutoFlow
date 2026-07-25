@@ -1,9 +1,11 @@
 package com.autoflow.customer;
 
+import com.autoflow.common.exception.InvalidOperationException;
 import com.autoflow.common.exception.ResourceNotFoundException;
 import com.autoflow.customer.dto.CreateCustomerRequest;
 import com.autoflow.customer.dto.CustomerResponse;
 import com.autoflow.customer.dto.UpdateCustomerRequest;
+import com.autoflow.vehicle.VehicleRepository;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +24,14 @@ public class CustomerService {
 
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
+    private final VehicleRepository vehicleRepository;
 
-    public CustomerService(CustomerRepository customerRepository, CustomerMapper customerMapper) {
+    public CustomerService(CustomerRepository customerRepository,
+                           CustomerMapper customerMapper,
+                           VehicleRepository vehicleRepository) {
         this.customerRepository = customerRepository;
         this.customerMapper = customerMapper;
+        this.vehicleRepository = vehicleRepository;
     }
 
     public CustomerResponse createCustomer(CreateCustomerRequest request) {
@@ -57,8 +63,13 @@ public class CustomerService {
 
     public void deleteCustomer(Long id) {
         Customer customer = findCustomerOrThrow(id);
-        // NOTE: once vehicles and work orders exist, this method must reject deletion
-        // when the customer still owns any of them (InvalidOperationException).
+        // Business data must not disappear implicitly: a customer that still owns
+        // vehicles cannot be deleted. (Work orders will be added here later too.)
+        if (vehicleRepository.existsByCustomerId(id)) {
+            log.info("Rejected deletion of customer {} because they still own vehicles", id);
+            throw new InvalidOperationException(
+                    "Customer cannot be deleted while they still own vehicles");
+        }
         customerRepository.delete(customer);
         log.info("Customer {} deleted", id);
     }
