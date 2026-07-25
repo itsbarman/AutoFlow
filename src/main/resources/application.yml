@@ -2,10 +2,8 @@ spring:
   application:
     name: autoflow-api
 
-  datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:autoflow}
-    username: ${DB_USERNAME:autoflow}
-    password: ${DB_PASSWORD:autoflow}
+  # Datasource is defined per profile (see application-local.yml). Tests get their
+  # datasource dynamically from Testcontainers (@ServiceConnection).
 
   jpa:
     hibernate:

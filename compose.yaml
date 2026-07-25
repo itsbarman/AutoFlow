@@ -3,34 +3,39 @@ services:
     image: postgres:16-alpine
     container_name: autoflow-db
     environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USERNAME}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-autoflow}
+      POSTGRES_USER: ${POSTGRES_USER:-autoflow}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-autoflow}
     ports:
-      - "${DB_PORT:-5432}:5432"
+      - "5432:5432"
     volumes:
-      - autoflow_db_data:/var/lib/postgresql/data
+      - autoflow_postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_NAME}"]
-      interval: 10s
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-autoflow} -d ${POSTGRES_DB:-autoflow}"
+        ]
+      interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 10
 
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: autoflow-api
+    environment:
+      SPRING_PROFILES_ACTIVE: local
+      # Inside the Docker network the database host is the service name "db".
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-autoflow}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-autoflow}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-autoflow}
+    ports:
+      - "8080:8080"
     depends_on:
       db:
         condition: service_healthy
-    environment:
-      SPRING_PROFILES_ACTIVE: local
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_NAME: ${DB_NAME}
-      DB_USERNAME: ${DB_USERNAME}
-      DB_PASSWORD: ${DB_PASSWORD}
-    ports:
-      - "8080:8080"
 
 volumes:
-  autoflow_db_data:
+  autoflow_postgres_data:

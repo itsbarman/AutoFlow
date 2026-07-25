@@ -61,12 +61,11 @@ Copy the example file and adjust the values. The real `.env` file is git-ignored
 cp .env.example .env
 ```
 
-| Variable      | Description                 | Example    |
-|---------------|-----------------------------|------------|
-| `DB_NAME`     | Database name               | `autoflow` |
-| `DB_USERNAME` | Database user               | `autoflow` |
-| `DB_PASSWORD` | Database password           | `change_me`|
-| `DB_PORT`     | Host port for PostgreSQL    | `5432`     |
+| Variable            | Description       | Example    |
+|---------------------|-------------------|------------|
+| `POSTGRES_DB`       | Database name     | `autoflow` |
+| `POSTGRES_USER`     | Database user     | `autoflow` |
+| `POSTGRES_PASSWORD` | Database password | `change_me`|
 
 ## Starting the database
 

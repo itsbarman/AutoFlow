@@ -1,6 +1,13 @@
 # Local development profile.
 # Activate with: SPRING_PROFILES_ACTIVE=local
 spring:
+  datasource:
+    # In Docker, SPRING_DATASOURCE_* env vars point at the "db" service.
+    # Outside Docker the defaults below connect to a local PostgreSQL.
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/autoflow}
+    username: ${SPRING_DATASOURCE_USERNAME:autoflow}
+    password: ${SPRING_DATASOURCE_PASSWORD:autoflow}
+
   jpa:
     show-sql: true
 
