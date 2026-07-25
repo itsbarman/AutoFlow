@@ -48,7 +48,13 @@ autoflow:
       username: ${AUTOFLOW_SECURITY_ADMIN_USERNAME:admin}
       password: ${AUTOFLOW_SECURITY_ADMIN_PASSWORD:admin123}
   vegvesen:
-    # Public Statens Vegvesen registration lookup API (no authentication required).
-    # Replace with the authenticated akfell-datautlevering endpoint when
-    # Maskinporten credentials are available.
+    # Public fallback: kjoretoyoppslag (no auth, but may be unreliable).
+    # Only used when maskinporten.client-id is NOT set.
     lookup-url: ${VEGVESEN_LOOKUP_URL:https://kjoretoyoppslag.atlas.vegvesen.no/kjennemerke}
+    maskinporten:
+      # Set these to enable reliable access via the official Vegvesen API.
+      # Register at https://sjolvbetjening.samarbeid.digdir.no/ with scope:
+      #   vegvesen:kjoretoy/basisopplysninger/hent
+      # client-id: ${VEGVESEN_MASKINPORTEN_CLIENT_ID:}
+      # private-key-pem: ${VEGVESEN_MASKINPORTEN_PRIVATE_KEY_PEM:}
+      url: ${VEGVESEN_MASKINPORTEN_URL:https://maskinporten.no/token}
