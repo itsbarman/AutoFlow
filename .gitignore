@@ -1,0 +1,36 @@
+# --- Java / Maven ---
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+hs_err_pid*
+dependency-reduced-pom.xml
+
+# --- Maven wrapper (keep wrapper scripts if you add them) ---
+.mvn/wrapper/maven-wrapper.jar
+
+# --- Environment / secrets ---
+.env
+*.env
+!.env.example
+
+# --- IntelliJ IDEA ---
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# --- VS Code ---
+.vscode/
+*.code-workspace
+
+# --- OS files ---
+.DS_Store
+Thumbs.db
+
+# --- Logs ---
+logs/
+*.log*

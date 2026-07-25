@@ -1,0 +1,10 @@
+# Local development profile.
+# Activate with: SPRING_PROFILES_ACTIVE=local
+spring:
+  jpa:
+    show-sql: true
+
+logging:
+  level:
+    com.autoflow: DEBUG
+    org.hibernate.SQL: DEBUG

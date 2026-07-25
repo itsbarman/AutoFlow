@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: autoflow-api
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:autoflow}
+    username: ${DB_USERNAME:autoflow}
+    password: ${DB_PASSWORD:autoflow}
+
+  jpa:
+    hibernate:
+      # Never let Hibernate create/alter the schema. Flyway owns the schema.
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        # Only expose safe endpoints for now.
+        include: health,info
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: autoflow-api
+    description: Digital workshop system for car repair shops

@@ -1,0 +1,11 @@
+# Test profile.
+# The datasource is provided dynamically by Testcontainers (@ServiceConnection),
+# so no connection details are needed here. Flyway still runs the real migrations
+# against a real PostgreSQL container.
+spring:
+  jpa:
+    show-sql: false
+
+logging:
+  level:
+    com.autoflow: DEBUG
