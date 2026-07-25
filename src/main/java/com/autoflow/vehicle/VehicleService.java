@@ -43,7 +43,7 @@ public class VehicleService {
 
     public VehicleResponse createVehicle(Long customerId, CreateVehicleRequest request) {
         Customer owner = customerRepository.findById(customerId)
-                .orElseThrow(() -> ResourceNotFoundException.of("Customer", customerId));
+                .orElseThrow(() -> ResourceNotFoundException.of("Kunde", customerId));
 
         String regNumber = normalizeRegistrationNumber(request.registrationNumber());
         validateModelYear(request.modelYear());
@@ -51,10 +51,10 @@ public class VehicleService {
 
         if (vehicleRepository.existsByRegistrationNumber(regNumber)) {
             throw new DuplicateResourceException(
-                    "A vehicle with registration number " + regNumber + " already exists");
+                    "Et kjøretøy med registreringsnummer " + regNumber + " finnes allerede");
         }
         if (vin != null && vehicleRepository.existsByVin(vin)) {
-            throw new DuplicateResourceException("A vehicle with VIN " + vin + " already exists");
+            throw new DuplicateResourceException("Et kjøretøy med VIN " + vin + " finnes allerede");
         }
 
         Vehicle vehicle = vehicleMapper.toEntity(request, owner, regNumber);
@@ -72,7 +72,7 @@ public class VehicleService {
     @Transactional(readOnly = true)
     public List<VehicleResponse> getVehiclesByCustomer(Long customerId) {
         if (!customerRepository.existsById(customerId)) {
-            throw ResourceNotFoundException.of("Customer", customerId);
+            throw ResourceNotFoundException.of("Kunde", customerId);
         }
         return vehicleRepository.findByCustomerIdOrderByIdAsc(customerId).stream()
                 .map(vehicleMapper::toResponse)
@@ -93,10 +93,10 @@ public class VehicleService {
 
         if (vehicleRepository.existsByRegistrationNumberAndIdNot(regNumber, id)) {
             throw new DuplicateResourceException(
-                    "A vehicle with registration number " + regNumber + " already exists");
+                    "Et kjøretøy med registreringsnummer " + regNumber + " finnes allerede");
         }
         if (vin != null && vehicleRepository.existsByVinAndIdNot(vin, id)) {
-            throw new DuplicateResourceException("A vehicle with VIN " + vin + " already exists");
+            throw new DuplicateResourceException("Et kjøretøy med VIN " + vin + " finnes allerede");
         }
 
         vehicleMapper.updateEntity(vehicle, request, regNumber);
@@ -113,7 +113,7 @@ public class VehicleService {
         if (workOrderRepository.existsByVehicleId(id)) {
             log.info("Rejected deletion of vehicle {} because it still has work orders", id);
             throw new InvalidOperationException(
-                    "Vehicle cannot be deleted while it still has work orders");
+                    "Kjøretøyet kan ikke slettes så lenge det har arbeidsordre");
         }
         vehicleRepository.delete(vehicle);
         log.info("Vehicle {} deleted", id);
@@ -121,7 +121,7 @@ public class VehicleService {
 
     private Vehicle findVehicleOrThrow(Long id) {
         return vehicleRepository.findById(id)
-                .orElseThrow(() -> ResourceNotFoundException.of("Vehicle", id));
+                .orElseThrow(() -> ResourceNotFoundException.of("Kjøretøy", id));
     }
 
     /** Uppercase and strip all whitespace, e.g. "ab 12345" -> "AB12345". */
@@ -145,7 +145,7 @@ public class VehicleService {
         int nextYear = Year.now().getValue() + 1;
         if (modelYear > nextYear) {
             throw new InvalidOperationException(
-                    "Model year cannot be later than " + nextYear);
+                    "Årsmodell kan ikke være senere enn " + nextYear);
         }
     }
 }

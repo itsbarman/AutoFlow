@@ -10,9 +10,9 @@ public class ResourceNotFoundException extends RuntimeException {
     }
 
     /**
-     * Convenience factory, e.g. {@code ResourceNotFoundException.of("Customer", 10)}.
+     * Convenience factory, e.g. {@code ResourceNotFoundException.of("Kunde", 10)}.
      */
     public static ResourceNotFoundException of(String resource, Object id) {
-        return new ResourceNotFoundException(resource + " with id " + id + " was not found");
+        return new ResourceNotFoundException(resource + " med id " + id + " ble ikke funnet");
     }
 }

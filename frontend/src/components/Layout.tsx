@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
-import { CarIcon, UsersIcon, WrenchIcon } from './icons';
+import { CarIcon, LogoutIcon, UsersIcon, WrenchIcon } from './icons';
+import { useAuth } from '../auth/AuthContext';
 
 export type View = 'customers' | 'vehicles' | 'workorders';
 
@@ -10,13 +11,15 @@ interface LayoutProps {
 }
 
 const tabs: { id: View; label: string; icon: typeof UsersIcon }[] = [
-  { id: 'customers', label: 'Customers', icon: UsersIcon },
-  { id: 'vehicles', label: 'Vehicles', icon: CarIcon },
-  { id: 'workorders', label: 'Work orders', icon: WrenchIcon },
+  { id: 'customers', label: 'Kunder', icon: UsersIcon },
+  { id: 'vehicles', label: 'Kjøretøy', icon: CarIcon },
+  { id: 'workorders', label: 'Arbeidsordre', icon: WrenchIcon },
 ];
 
-/** App shell: top bar with branding and tab navigation. */
+/** App shell: top bar with branding, tab navigation and the logged-in user. */
 export function Layout({ view, onNavigate, children }: LayoutProps) {
+  const { user, logout } = useAuth();
+
   return (
     <div className="min-h-screen bg-slate-50">
       <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/80 backdrop-blur">
@@ -27,7 +30,7 @@ export function Layout({ view, onNavigate, children }: LayoutProps) {
             </div>
             <div className="leading-tight">
               <p className="text-sm font-semibold text-slate-800">AutoFlow</p>
-              <p className="text-xs text-slate-400">Workshop management</p>
+              <p className="text-xs text-slate-400">Verkstedsystem</p>
             </div>
           </div>
 
@@ -51,6 +54,21 @@ export function Layout({ view, onNavigate, children }: LayoutProps) {
               );
             })}
           </nav>
+
+          <div className="ml-auto flex items-center gap-3">
+            {user && (
+              <span className="hidden text-sm text-slate-500 sm:inline">
+                {user.fullName}
+              </span>
+            )}
+            <button
+              onClick={logout}
+              className="inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700"
+            >
+              <LogoutIcon width={16} height={16} />
+              <span className="hidden sm:inline">Logg ut</span>
+            </button>
+          </div>
         </div>
       </header>
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">{children}</main>

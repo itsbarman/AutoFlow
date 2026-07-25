@@ -37,7 +37,7 @@ public class WorkOrderService {
 
     public WorkOrderResponse createWorkOrder(Long vehicleId, CreateWorkOrderRequest request) {
         Vehicle vehicle = vehicleRepository.findById(vehicleId)
-                .orElseThrow(() -> ResourceNotFoundException.of("Vehicle", vehicleId));
+                .orElseThrow(() -> ResourceNotFoundException.of("Kjøretøy", vehicleId));
 
         // The customer is always derived from the vehicle's owner.
         String number = generateWorkOrderNumber();
@@ -55,7 +55,7 @@ public class WorkOrderService {
     @Transactional(readOnly = true)
     public List<WorkOrderResponse> getWorkOrdersByVehicle(Long vehicleId) {
         if (!vehicleRepository.existsById(vehicleId)) {
-            throw ResourceNotFoundException.of("Vehicle", vehicleId);
+            throw ResourceNotFoundException.of("Kjøretøy", vehicleId);
         }
         return workOrderRepository.findByVehicleIdOrderByIdAsc(vehicleId).stream()
                 .map(workOrderMapper::toResponse)
@@ -98,7 +98,7 @@ public class WorkOrderService {
 
     private WorkOrder findWorkOrderOrThrow(Long id) {
         return workOrderRepository.findById(id)
-                .orElseThrow(() -> ResourceNotFoundException.of("Work order", id));
+                .orElseThrow(() -> ResourceNotFoundException.of("Arbeidsordre", id));
     }
 
     /** Produces a readable, unique number such as "WO-000042". */

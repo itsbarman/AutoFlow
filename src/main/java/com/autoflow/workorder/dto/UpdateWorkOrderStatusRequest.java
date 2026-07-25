@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public record UpdateWorkOrderStatusRequest(
 
-        @NotNull(message = "Status is required")
+        @NotNull(message = "Status er påkrevd")
         WorkOrderStatus status
 ) {
 }

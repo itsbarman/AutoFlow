@@ -9,12 +9,12 @@ export type WorkOrderStatus =
 export type WorkOrderPriority = 'LOW' | 'NORMAL' | 'HIGH' | 'URGENT';
 
 export const STATUS_LABELS: Record<WorkOrderStatus, string> = {
-  CREATED: 'Created',
-  BOOKED: 'Booked',
-  IN_PROGRESS: 'In progress',
-  WAITING_FOR_PARTS: 'Waiting for parts',
-  COMPLETED: 'Completed',
-  CANCELLED: 'Cancelled',
+  CREATED: 'Opprettet',
+  BOOKED: 'Booket',
+  IN_PROGRESS: 'Under arbeid',
+  WAITING_FOR_PARTS: 'Venter på deler',
+  COMPLETED: 'Fullført',
+  CANCELLED: 'Kansellert',
 };
 
 /** Tailwind classes for each status badge. */
@@ -28,10 +28,10 @@ export const STATUS_STYLES: Record<WorkOrderStatus, string> = {
 };
 
 export const PRIORITY_LABELS: Record<WorkOrderPriority, string> = {
-  LOW: 'Low',
+  LOW: 'Lav',
   NORMAL: 'Normal',
-  HIGH: 'High',
-  URGENT: 'Urgent',
+  HIGH: 'Høy',
+  URGENT: 'Haster',
 };
 
 export const PRIORITY_STYLES: Record<WorkOrderPriority, string> = {

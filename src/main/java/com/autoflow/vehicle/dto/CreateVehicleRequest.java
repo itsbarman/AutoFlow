@@ -12,28 +12,28 @@ import jakarta.validation.constraints.Size;
  */
 public record CreateVehicleRequest(
 
-        @NotBlank(message = "Registration number must not be blank")
-        @Size(max = 15, message = "Registration number must be at most 15 characters")
+        @NotBlank(message = "Registreringsnummer kan ikke være tomt")
+        @Size(max = 15, message = "Registreringsnummer kan være maks 15 tegn")
         String registrationNumber,
 
-        @Size(max = 17, message = "VIN must be at most 17 characters")
+        @Size(max = 17, message = "VIN kan være maks 17 tegn")
         String vin,
 
-        @NotBlank(message = "Make must not be blank")
-        @Size(max = 60, message = "Make must be at most 60 characters")
+        @NotBlank(message = "Merke kan ikke være tomt")
+        @Size(max = 60, message = "Merke kan være maks 60 tegn")
         String make,
 
-        @NotBlank(message = "Model must not be blank")
-        @Size(max = 60, message = "Model must be at most 60 characters")
+        @NotBlank(message = "Modell kan ikke være tomt")
+        @Size(max = 60, message = "Modell kan være maks 60 tegn")
         String model,
 
-        @Min(value = 1900, message = "Model year must be 1900 or later")
+        @Min(value = 1900, message = "Årsmodell må være 1900 eller senere")
         Integer modelYear,
 
-        @PositiveOrZero(message = "Mileage cannot be negative")
+        @PositiveOrZero(message = "Kilometerstand kan ikke være negativ")
         Integer mileage,
 
-        @NotNull(message = "Fuel type is required")
+        @NotNull(message = "Drivstoff er påkrevd")
         FuelType fuelType
 ) {
 }

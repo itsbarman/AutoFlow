@@ -18,13 +18,13 @@ export function VehicleTable({ vehicles, onEdit, onDelete }: VehicleTableProps) 
       <table className="w-full text-left text-sm">
         <thead className="border-b border-slate-200 bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
           <tr>
-            <th className="px-4 py-3 font-medium sm:px-6">Vehicle</th>
-            <th className="px-4 py-3 font-medium">Reg. number</th>
-            <th className="hidden px-4 py-3 font-medium md:table-cell">Year</th>
-            <th className="hidden px-4 py-3 font-medium lg:table-cell">Mileage</th>
-            <th className="hidden px-4 py-3 font-medium sm:table-cell">Fuel</th>
-            <th className="px-4 py-3 font-medium">Customer</th>
-            <th className="px-4 py-3 text-right font-medium sm:px-6">Actions</th>
+            <th className="px-4 py-3 font-medium sm:px-6">Kjøretøy</th>
+            <th className="px-4 py-3 font-medium">Reg.nr</th>
+            <th className="hidden px-4 py-3 font-medium md:table-cell">År</th>
+            <th className="hidden px-4 py-3 font-medium lg:table-cell">Kilometerstand</th>
+            <th className="hidden px-4 py-3 font-medium sm:table-cell">Drivstoff</th>
+            <th className="px-4 py-3 font-medium">Kunde</th>
+            <th className="px-4 py-3 text-right font-medium sm:px-6">Handlinger</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-100">
@@ -40,7 +40,7 @@ export function VehicleTable({ vehicles, onEdit, onDelete }: VehicleTableProps) 
                       {vehicle.make} {vehicle.model}
                     </p>
                     <p className="text-xs text-slate-400">
-                      {vehicle.vin ? `VIN ${vehicle.vin}` : 'No VIN'}
+                      {vehicle.vin ? `VIN ${vehicle.vin}` : 'Ingen VIN'}
                     </p>
                   </div>
                 </div>
@@ -66,14 +66,14 @@ export function VehicleTable({ vehicles, onEdit, onDelete }: VehicleTableProps) 
                 <div className="flex justify-end gap-1">
                   <button
                     onClick={() => onEdit(vehicle)}
-                    aria-label={`Edit ${vehicle.registrationNumber}`}
+                    aria-label={`Rediger ${vehicle.registrationNumber}`}
                     className="rounded-lg p-2 text-slate-400 transition-colors hover:bg-brand-50 hover:text-brand-600"
                   >
                     <EditIcon width={18} height={18} />
                   </button>
                   <button
                     onClick={() => onDelete(vehicle)}
-                    aria-label={`Delete ${vehicle.registrationNumber}`}
+                    aria-label={`Slett ${vehicle.registrationNumber}`}
                     className="rounded-lg p-2 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600"
                   >
                     <TrashIcon width={18} height={18} />
@@ -90,9 +90,9 @@ export function VehicleTable({ vehicles, onEdit, onDelete }: VehicleTableProps) 
           <span className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-400">
             <CarIcon />
           </span>
-          <p className="font-medium text-slate-600">No vehicles found</p>
+          <p className="font-medium text-slate-600">Ingen kjøretøy funnet</p>
           <p className="text-sm text-slate-400">
-            Register a vehicle on a customer to see it here.
+            Registrer et kjøretøy på en kunde for å se det her.
           </p>
         </div>
       )}

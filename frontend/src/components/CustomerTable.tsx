@@ -12,7 +12,7 @@ function initials(customer: Customer): string {
 }
 
 function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString(undefined, {
+  return new Date(iso).toLocaleDateString('nb-NO', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
@@ -25,12 +25,12 @@ export function CustomerTable({ customers, onEdit, onDelete }: CustomerTableProp
       <table className="w-full text-left text-sm">
         <thead className="border-b border-slate-200 bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
           <tr>
-            <th className="px-4 py-3 font-medium sm:px-6">Customer</th>
-            <th className="px-4 py-3 font-medium">Phone</th>
-            <th className="hidden px-4 py-3 font-medium md:table-cell">Email</th>
-            <th className="hidden px-4 py-3 font-medium lg:table-cell">City</th>
-            <th className="hidden px-4 py-3 font-medium lg:table-cell">Created</th>
-            <th className="px-4 py-3 text-right font-medium sm:px-6">Actions</th>
+            <th className="px-4 py-3 font-medium sm:px-6">Kunde</th>
+            <th className="px-4 py-3 font-medium">Telefon</th>
+            <th className="hidden px-4 py-3 font-medium md:table-cell">E-post</th>
+            <th className="hidden px-4 py-3 font-medium lg:table-cell">By</th>
+            <th className="hidden px-4 py-3 font-medium lg:table-cell">Opprettet</th>
+            <th className="px-4 py-3 text-right font-medium sm:px-6">Handlinger</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-100">
@@ -46,7 +46,7 @@ export function CustomerTable({ customers, onEdit, onDelete }: CustomerTableProp
                       {customer.firstName} {customer.lastName}
                     </p>
                     <p className="text-xs text-slate-400 md:hidden">
-                      {customer.email ?? 'No email'}
+                      {customer.email ?? 'Ingen e-post'}
                     </p>
                   </div>
                 </div>
@@ -65,14 +65,14 @@ export function CustomerTable({ customers, onEdit, onDelete }: CustomerTableProp
                 <div className="flex justify-end gap-1">
                   <button
                     onClick={() => onEdit(customer)}
-                    aria-label={`Edit ${customer.firstName}`}
+                    aria-label={`Rediger ${customer.firstName}`}
                     className="rounded-lg p-2 text-slate-400 transition-colors hover:bg-brand-50 hover:text-brand-600"
                   >
                     <EditIcon width={18} height={18} />
                   </button>
                   <button
                     onClick={() => onDelete(customer)}
-                    aria-label={`Delete ${customer.firstName}`}
+                    aria-label={`Slett ${customer.firstName}`}
                     className="rounded-lg p-2 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600"
                   >
                     <TrashIcon width={18} height={18} />
@@ -89,8 +89,8 @@ export function CustomerTable({ customers, onEdit, onDelete }: CustomerTableProp
           <span className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-400">
             <UsersIcon />
           </span>
-          <p className="font-medium text-slate-600">No customers found</p>
-          <p className="text-sm text-slate-400">Try adjusting your search or add a new customer.</p>
+          <p className="font-medium text-slate-600">Ingen kunder funnet</p>
+          <p className="text-sm text-slate-400">Juster søket eller legg til en ny kunde.</p>
         </div>
       )}
     </div>

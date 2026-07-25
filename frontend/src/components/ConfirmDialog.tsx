@@ -15,7 +15,7 @@ export function ConfirmDialog({
   open,
   title,
   message,
-  confirmLabel = 'Delete',
+  confirmLabel = 'Slett',
   loading = false,
   onConfirm,
   onCancel,
@@ -25,7 +25,7 @@ export function ConfirmDialog({
       <p className="text-sm text-slate-600">{message}</p>
       <div className="mt-6 flex justify-end gap-3">
         <Button variant="secondary" onClick={onCancel} disabled={loading}>
-          Cancel
+          Avbryt
         </Button>
         <Button variant="danger" onClick={onConfirm} loading={loading}>
           {confirmLabel}

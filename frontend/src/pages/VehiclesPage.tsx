@@ -41,7 +41,7 @@ export function VehiclesPage() {
       setVehicles(vehicleList);
       setCustomers(customerList);
     } catch (err) {
-      setLoadError(err instanceof Error ? err.message : 'Failed to load vehicles');
+      setLoadError(err instanceof Error ? err.message : 'Kunne ikke laste kjøretøy');
     } finally {
       setLoading(false);
     }
@@ -81,18 +81,18 @@ export function VehiclesPage() {
       if (editing) {
         const updated = await vehicleApi.update(editing.id, input);
         setVehicles((list) => list.map((v) => (v.id === updated.id ? updated : v)));
-        toast.success('Vehicle updated');
+        toast.success('Kjøretøy oppdatert');
       } else {
         const created = await vehicleApi.create(customerId, input);
         setVehicles((list) => [...list, created]);
-        toast.success('Vehicle registered');
+        toast.success('Kjøretøy registrert');
       }
       setFormOpen(false);
     } catch (err) {
       if (err instanceof ApiRequestError && err.validationErrors.length > 0) {
         setServerErrors(err.validationErrors);
       } else {
-        toast.error(err instanceof Error ? err.message : 'Something went wrong');
+        toast.error(err instanceof Error ? err.message : 'Noe gikk galt');
       }
     } finally {
       setSubmitting(false);
@@ -105,10 +105,10 @@ export function VehiclesPage() {
     try {
       await vehicleApi.remove(deleting.id);
       setVehicles((list) => list.filter((v) => v.id !== deleting.id));
-      toast.success('Vehicle deleted');
+      toast.success('Kjøretøy slettet');
       setDeleting(null);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to delete vehicle');
+      toast.error(err instanceof Error ? err.message : 'Kunne ikke slette kjøretøy');
     } finally {
       setDeleteLoading(false);
     }
@@ -120,20 +120,20 @@ export function VehiclesPage() {
     <>
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-slate-800">Vehicles</h1>
+          <h1 className="text-2xl font-semibold text-slate-800">Kjøretøy</h1>
           <p className="text-sm text-slate-500">
-            {vehicles.length} {vehicles.length === 1 ? 'vehicle' : 'vehicles'} registered
+            {vehicles.length} {vehicles.length === 1 ? 'kjøretøy' : 'kjøretøy'} registrert
           </p>
         </div>
-        <Button onClick={openCreate} disabled={noCustomers} title={noCustomers ? 'Add a customer first' : undefined}>
+        <Button onClick={openCreate} disabled={noCustomers} title={noCustomers ? 'Legg til en kunde først' : undefined}>
           <PlusIcon width={18} height={18} />
-          New vehicle
+          Nytt kjøretøy
         </Button>
       </div>
 
       {noCustomers && (
         <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
-          You need at least one customer before you can register a vehicle.
+          Du må ha minst én kunde før du kan registrere et kjøretøy.
         </div>
       )}
 
@@ -146,7 +146,7 @@ export function VehiclesPage() {
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search vehicles..."
+          placeholder="Søk kjøretøy..."
           className="w-full rounded-lg border border-slate-300 py-2 pl-10 pr-3 text-sm shadow-sm
             focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
         />
@@ -160,10 +160,10 @@ export function VehiclesPage() {
         <div className="rounded-xl border border-red-200 bg-red-50 px-6 py-12 text-center">
           <p className="font-medium text-red-700">{loadError}</p>
           <p className="mb-4 mt-1 text-sm text-red-500">
-            Make sure the API is running on the configured address.
+            Sjekk at API-et kjører på den konfigurerte adressen.
           </p>
           <Button variant="secondary" onClick={() => void loadData()}>
-            Try again
+            Prøv igjen
           </Button>
         </div>
       ) : (
@@ -172,7 +172,7 @@ export function VehiclesPage() {
 
       <Modal
         open={formOpen}
-        title={editing ? 'Edit vehicle' : 'New vehicle'}
+        title={editing ? 'Rediger kjøretøy' : 'Nytt kjøretøy'}
         onClose={() => setFormOpen(false)}
       >
         <VehicleForm
@@ -187,10 +187,10 @@ export function VehiclesPage() {
 
       <ConfirmDialog
         open={deleting !== null}
-        title="Delete vehicle"
+        title="Slett kjøretøy"
         message={
           deleting
-            ? `Are you sure you want to delete ${deleting.make} ${deleting.model} (${deleting.registrationNumber})? This cannot be undone.`
+            ? `Er du sikker på at du vil slette ${deleting.make} ${deleting.model} (${deleting.registrationNumber})? Dette kan ikke angres.`
             : ''
         }
         loading={deleteLoading}

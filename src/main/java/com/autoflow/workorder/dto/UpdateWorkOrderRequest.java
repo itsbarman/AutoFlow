@@ -13,23 +13,23 @@ import java.time.LocalDate;
  */
 public record UpdateWorkOrderRequest(
 
-        @NotBlank(message = "Title must not be blank")
-        @Size(max = 150, message = "Title must be at most 150 characters")
+        @NotBlank(message = "Tittel kan ikke være tom")
+        @Size(max = 150, message = "Tittel kan være maks 150 tegn")
         String title,
 
-        @Size(max = 2000, message = "Description must be at most 2000 characters")
+        @Size(max = 2000, message = "Beskrivelse kan være maks 2000 tegn")
         String description,
 
-        @NotNull(message = "Priority is required")
+        @NotNull(message = "Prioritet er påkrevd")
         WorkOrderPriority priority,
 
-        @PositiveOrZero(message = "Mileage at arrival cannot be negative")
+        @PositiveOrZero(message = "Kilometerstand ved ankomst kan ikke være negativ")
         Integer mileageAtArrival,
 
-        @Size(max = 2000, message = "Customer complaint must be at most 2000 characters")
+        @Size(max = 2000, message = "Kundens beskrivelse kan være maks 2000 tegn")
         String customerComplaint,
 
-        @Size(max = 2000, message = "Technician notes must be at most 2000 characters")
+        @Size(max = 2000, message = "Tekniker-notater kan være maks 2000 tegn")
         String technicianNotes,
 
         LocalDate estimatedCompletionDate

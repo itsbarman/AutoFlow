@@ -9,29 +9,29 @@ import jakarta.validation.constraints.Size;
  */
 public record CreateCustomerRequest(
 
-        @NotBlank(message = "First name must not be blank")
-        @Size(max = 100, message = "First name must be at most 100 characters")
+        @NotBlank(message = "Fornavn kan ikke være tomt")
+        @Size(max = 100, message = "Fornavn kan være maks 100 tegn")
         String firstName,
 
-        @NotBlank(message = "Last name must not be blank")
-        @Size(max = 100, message = "Last name must be at most 100 characters")
+        @NotBlank(message = "Etternavn kan ikke være tomt")
+        @Size(max = 100, message = "Etternavn kan være maks 100 tegn")
         String lastName,
 
-        @NotBlank(message = "Phone number must not be blank")
-        @Size(max = 30, message = "Phone number must be at most 30 characters")
+        @NotBlank(message = "Telefonnummer kan ikke være tomt")
+        @Size(max = 30, message = "Telefonnummer kan være maks 30 tegn")
         String phoneNumber,
 
-        @Email(message = "Email must be a valid email address")
-        @Size(max = 255, message = "Email must be at most 255 characters")
+        @Email(message = "E-post må være en gyldig e-postadresse")
+        @Size(max = 255, message = "E-post kan være maks 255 tegn")
         String email,
 
-        @Size(max = 255, message = "Address must be at most 255 characters")
+        @Size(max = 255, message = "Adresse kan være maks 255 tegn")
         String address,
 
-        @Size(max = 20, message = "Postal code must be at most 20 characters")
+        @Size(max = 20, message = "Postnummer kan være maks 20 tegn")
         String postalCode,
 
-        @Size(max = 100, message = "City must be at most 100 characters")
+        @Size(max = 100, message = "By kan være maks 100 tegn")
         String city
 ) {
 }

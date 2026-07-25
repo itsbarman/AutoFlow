@@ -87,7 +87,7 @@ class CustomerServiceTest {
 
         assertThatThrownBy(() -> customerService.deleteCustomer(3L))
                 .isInstanceOf(InvalidOperationException.class)
-                .hasMessageContaining("vehicles");
+                .hasMessageContaining("kjøretøy");
 
         verify(customerRepository, never()).delete(any(Customer.class));
     }

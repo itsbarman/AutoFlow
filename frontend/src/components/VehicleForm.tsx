@@ -55,14 +55,14 @@ export function VehicleForm({
   const [touched, setTouched] = useState(false);
 
   const clientErrors: Partial<Record<string, string>> = {};
-  if (!values.registrationNumber.trim()) clientErrors.registrationNumber = 'Registration number is required';
-  if (!values.make.trim()) clientErrors.make = 'Make is required';
-  if (!values.model.trim()) clientErrors.model = 'Model is required';
-  if (!initial && !customerId) clientErrors.customerId = 'Please choose a customer';
+  if (!values.registrationNumber.trim()) clientErrors.registrationNumber = 'Registreringsnummer er påkrevd';
+  if (!values.make.trim()) clientErrors.make = 'Merke er påkrevd';
+  if (!values.model.trim()) clientErrors.model = 'Modell er påkrevd';
+  if (!initial && !customerId) clientErrors.customerId = 'Velg en kunde';
   if (values.modelYear && (Number(values.modelYear) < 1900 || Number(values.modelYear) > currentYear + 1)) {
-    clientErrors.modelYear = `Enter a year between 1900 and ${currentYear + 1}`;
+    clientErrors.modelYear = `Oppgi et år mellom 1900 og ${currentYear + 1}`;
   }
-  if (values.mileage && Number(values.mileage) < 0) clientErrors.mileage = 'Mileage cannot be negative';
+  if (values.mileage && Number(values.mileage) < 0) clientErrors.mileage = 'Kilometerstand kan ikke være negativ';
 
   const errorFor = (field: string): string | undefined => {
     const server = serverErrors.find((e) => e.field === field);
@@ -86,7 +86,7 @@ export function VehicleForm({
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Select
           id="customerId"
-          label="Customer"
+          label="Kunde"
           required
           className="sm:col-span-2"
           value={customerId}
@@ -94,7 +94,7 @@ export function VehicleForm({
           error={errorFor('customerId')}
           disabled={Boolean(initial)}
         >
-          <option value="">Select a customer...</option>
+          <option value="">Velg en kunde...</option>
           {customers.map((c) => (
             <option key={c.id} value={c.id}>
               {c.firstName} {c.lastName}
@@ -104,7 +104,7 @@ export function VehicleForm({
 
         <TextField
           id="registrationNumber"
-          label="Registration number"
+          label="Registreringsnummer"
           required
           value={values.registrationNumber}
           onChange={set('registrationNumber')}
@@ -119,7 +119,7 @@ export function VehicleForm({
         />
         <TextField
           id="make"
-          label="Make"
+          label="Merke"
           required
           value={values.make}
           onChange={set('make')}
@@ -127,7 +127,7 @@ export function VehicleForm({
         />
         <TextField
           id="model"
-          label="Model"
+          label="Modell"
           required
           value={values.model}
           onChange={set('model')}
@@ -135,7 +135,7 @@ export function VehicleForm({
         />
         <TextField
           id="modelYear"
-          label="Model year"
+          label="Årsmodell"
           type="number"
           value={values.modelYear}
           onChange={set('modelYear')}
@@ -143,7 +143,7 @@ export function VehicleForm({
         />
         <TextField
           id="mileage"
-          label="Mileage (km)"
+          label="Kilometerstand (km)"
           type="number"
           value={values.mileage}
           onChange={set('mileage')}
@@ -151,7 +151,7 @@ export function VehicleForm({
         />
         <Select
           id="fuelType"
-          label="Fuel type"
+          label="Drivstoff"
           required
           className="sm:col-span-2"
           value={values.fuelType}
@@ -168,10 +168,10 @@ export function VehicleForm({
 
       <div className="mt-6 flex justify-end gap-3">
         <Button type="button" variant="secondary" onClick={onCancel} disabled={submitting}>
-          Cancel
+          Avbryt
         </Button>
         <Button type="submit" loading={submitting}>
-          {initial ? 'Save changes' : 'Register vehicle'}
+          {initial ? 'Lagre endringer' : 'Registrer kjøretøy'}
         </Button>
       </div>
     </form>

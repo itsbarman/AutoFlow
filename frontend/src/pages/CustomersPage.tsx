@@ -34,7 +34,7 @@ export function CustomersPage() {
     try {
       setCustomers(await customerApi.list());
     } catch (err) {
-      setLoadError(err instanceof Error ? err.message : 'Failed to load customers');
+      setLoadError(err instanceof Error ? err.message : 'Kunne ikke laste kunder');
     } finally {
       setLoading(false);
     }
@@ -74,18 +74,18 @@ export function CustomersPage() {
       if (editing) {
         const updated = await customerApi.update(editing.id, input);
         setCustomers((list) => list.map((c) => (c.id === updated.id ? updated : c)));
-        toast.success('Customer updated');
+        toast.success('Kunde oppdatert');
       } else {
         const created = await customerApi.create(input);
         setCustomers((list) => [...list, created]);
-        toast.success('Customer created');
+        toast.success('Kunde opprettet');
       }
       setFormOpen(false);
     } catch (err) {
       if (err instanceof ApiRequestError && err.validationErrors.length > 0) {
         setServerErrors(err.validationErrors);
       } else {
-        toast.error(err instanceof Error ? err.message : 'Something went wrong');
+        toast.error(err instanceof Error ? err.message : 'Noe gikk galt');
       }
     } finally {
       setSubmitting(false);
@@ -98,10 +98,10 @@ export function CustomersPage() {
     try {
       await customerApi.remove(deleting.id);
       setCustomers((list) => list.filter((c) => c.id !== deleting.id));
-      toast.success('Customer deleted');
+      toast.success('Kunde slettet');
       setDeleting(null);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to delete customer');
+      toast.error(err instanceof Error ? err.message : 'Kunne ikke slette kunde');
     } finally {
       setDeleteLoading(false);
     }
@@ -111,14 +111,14 @@ export function CustomersPage() {
     <>
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-slate-800">Customers</h1>
+          <h1 className="text-2xl font-semibold text-slate-800">Kunder</h1>
           <p className="text-sm text-slate-500">
-            {customers.length} {customers.length === 1 ? 'customer' : 'customers'} registered
+            {customers.length} {customers.length === 1 ? 'kunde' : 'kunder'} registrert
           </p>
         </div>
         <Button onClick={openCreate}>
           <PlusIcon width={18} height={18} />
-          New customer
+          Ny kunde
         </Button>
       </div>
 
@@ -131,7 +131,7 @@ export function CustomersPage() {
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search customers..."
+          placeholder="Søk kunder..."
           className="w-full rounded-lg border border-slate-300 py-2 pl-10 pr-3 text-sm shadow-sm
             focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
         />
@@ -145,10 +145,10 @@ export function CustomersPage() {
         <div className="rounded-xl border border-red-200 bg-red-50 px-6 py-12 text-center">
           <p className="font-medium text-red-700">{loadError}</p>
           <p className="mb-4 mt-1 text-sm text-red-500">
-            Make sure the API is running on the configured address.
+            Sjekk at API-et kjører på den konfigurerte adressen.
           </p>
           <Button variant="secondary" onClick={() => void loadCustomers()}>
-            Try again
+            Prøv igjen
           </Button>
         </div>
       ) : (
@@ -157,7 +157,7 @@ export function CustomersPage() {
 
       <Modal
         open={formOpen}
-        title={editing ? 'Edit customer' : 'New customer'}
+        title={editing ? 'Rediger kunde' : 'Ny kunde'}
         onClose={() => setFormOpen(false)}
       >
         <CustomerForm
@@ -171,10 +171,10 @@ export function CustomersPage() {
 
       <ConfirmDialog
         open={deleting !== null}
-        title="Delete customer"
+        title="Slett kunde"
         message={
           deleting
-            ? `Are you sure you want to delete ${deleting.firstName} ${deleting.lastName}? This cannot be undone.`
+            ? `Er du sikker på at du vil slette ${deleting.firstName} ${deleting.lastName}? Dette kan ikke angres.`
             : ''
         }
         loading={deleteLoading}

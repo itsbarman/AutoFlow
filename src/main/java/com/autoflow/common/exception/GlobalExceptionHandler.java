@@ -38,6 +38,17 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * Wrong username or password on login. Returns 401 without revealing which
+     * part was wrong.
+     */
+    @ExceptionHandler(org.springframework.security.authentication.BadCredentialsException.class)
+    public ResponseEntity<ApiError> handleBadCredentials(
+            org.springframework.security.authentication.BadCredentialsException ex,
+            HttpServletRequest request) {
+        return build(HttpStatus.UNAUTHORIZED, ex.getMessage(), request, List.of());
+    }
+
+    /**
      * Bean validation failures (@Valid on request bodies). Returns 400 with a list
      * of field errors so the client knows exactly what to fix.
      */
@@ -47,7 +58,7 @@ public class GlobalExceptionHandler {
         List<ValidationError> fieldErrors = ex.getBindingResult().getFieldErrors().stream()
                 .map(GlobalExceptionHandler::toValidationError)
                 .toList();
-        return build(HttpStatus.BAD_REQUEST, "Validation failed", request, fieldErrors);
+        return build(HttpStatus.BAD_REQUEST, "Validering feilet", request, fieldErrors);
     }
 
     /**
@@ -58,7 +69,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleUnexpected(Exception ex, HttpServletRequest request) {
         log.error("Unexpected error handling {} {}", request.getMethod(), request.getRequestURI(), ex);
         return build(HttpStatus.INTERNAL_SERVER_ERROR,
-                "An unexpected error occurred", request, List.of());
+                "En uventet feil oppstod", request, List.of());
     }
 
     private static ValidationError toValidationError(FieldError fieldError) {

@@ -16,6 +16,7 @@ import { Modal } from '../components/Modal';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { WorkOrderForm } from '../components/WorkOrderForm';
 import { WorkOrderTable } from '../components/WorkOrderTable';
+import { WorkOrderDetail } from '../components/WorkOrderDetail';
 import { PlusIcon, SearchIcon } from '../components/icons';
 import { useToast } from '../components/ToastProvider';
 
@@ -36,6 +37,8 @@ export function WorkOrdersPage() {
   const [deleting, setDeleting] = useState<WorkOrder | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
+  const [viewing, setViewing] = useState<WorkOrder | null>(null);
+
   async function loadData() {
     setLoading(true);
     setLoadError(null);
@@ -47,7 +50,7 @@ export function WorkOrdersPage() {
       setWorkOrders(orderList);
       setVehicles(vehicleList);
     } catch (err) {
-      setLoadError(err instanceof Error ? err.message : 'Failed to load work orders');
+      setLoadError(err instanceof Error ? err.message : 'Kunne ikke laste arbeidsordre');
     } finally {
       setLoading(false);
     }
@@ -94,18 +97,18 @@ export function WorkOrdersPage() {
       if (editing) {
         const updated = await workOrderApi.update(editing.id, input);
         setWorkOrders((list) => list.map((w) => (w.id === updated.id ? updated : w)));
-        toast.success('Work order updated');
+        toast.success('Arbeidsordre oppdatert');
       } else {
         const created = await workOrderApi.create(vehicleId, input);
         setWorkOrders((list) => [...list, created]);
-        toast.success('Work order created');
+        toast.success('Arbeidsordre opprettet');
       }
       setFormOpen(false);
     } catch (err) {
       if (err instanceof ApiRequestError && err.validationErrors.length > 0) {
         setServerErrors(err.validationErrors);
       } else {
-        toast.error(err instanceof Error ? err.message : 'Something went wrong');
+        toast.error(err instanceof Error ? err.message : 'Noe gikk galt');
       }
     } finally {
       setSubmitting(false);
@@ -117,9 +120,9 @@ export function WorkOrdersPage() {
     try {
       const updated = await workOrderApi.updateStatus(workOrder.id, status);
       setWorkOrders((list) => list.map((w) => (w.id === updated.id ? updated : w)));
-      toast.success(`Status set to ${STATUS_LABELS[status]}`);
+      toast.success(`Status satt til ${STATUS_LABELS[status]}`);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to change status');
+      toast.error(err instanceof Error ? err.message : 'Kunne ikke endre status');
     }
   }
 
@@ -129,10 +132,10 @@ export function WorkOrdersPage() {
     try {
       await workOrderApi.remove(deleting.id);
       setWorkOrders((list) => list.filter((w) => w.id !== deleting.id));
-      toast.success('Work order deleted');
+      toast.success('Arbeidsordre slettet');
       setDeleting(null);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to delete work order');
+      toast.error(err instanceof Error ? err.message : 'Kunne ikke slette arbeidsordre');
     } finally {
       setDeleteLoading(false);
     }
@@ -144,20 +147,20 @@ export function WorkOrdersPage() {
     <>
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-slate-800">Work orders</h1>
+          <h1 className="text-2xl font-semibold text-slate-800">Arbeidsordre</h1>
           <p className="text-sm text-slate-500">
-            {workOrders.length} {workOrders.length === 1 ? 'work order' : 'work orders'}
+            {workOrders.length} {workOrders.length === 1 ? 'arbeidsordre' : 'arbeidsordre'}
           </p>
         </div>
-        <Button onClick={openCreate} disabled={noVehicles} title={noVehicles ? 'Register a vehicle first' : undefined}>
+        <Button onClick={openCreate} disabled={noVehicles} title={noVehicles ? 'Registrer et kjøretøy først' : undefined}>
           <PlusIcon width={18} height={18} />
-          New work order
+          Ny arbeidsordre
         </Button>
       </div>
 
       {noVehicles && (
         <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
-          You need at least one vehicle before you can create a work order.
+          Du må ha minst ett kjøretøy før du kan opprette en arbeidsordre.
         </div>
       )}
 
@@ -170,7 +173,7 @@ export function WorkOrdersPage() {
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search work orders..."
+          placeholder="Søk arbeidsordre..."
           className="w-full rounded-lg border border-slate-300 py-2 pl-10 pr-3 text-sm shadow-sm
             focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
         />
@@ -184,15 +187,16 @@ export function WorkOrdersPage() {
         <div className="rounded-xl border border-red-200 bg-red-50 px-6 py-12 text-center">
           <p className="font-medium text-red-700">{loadError}</p>
           <p className="mb-4 mt-1 text-sm text-red-500">
-            Make sure the API is running on the configured address.
+            Sjekk at API-et kjører på den konfigurerte adressen.
           </p>
           <Button variant="secondary" onClick={() => void loadData()}>
-            Try again
+            Prøv igjen
           </Button>
         </div>
       ) : (
         <WorkOrderTable
           workOrders={filtered}
+          onView={setViewing}
           onEdit={openEdit}
           onDelete={setDeleting}
           onStatusChange={handleStatusChange}
@@ -201,7 +205,7 @@ export function WorkOrdersPage() {
 
       <Modal
         open={formOpen}
-        title={editing ? `Edit ${editing.workOrderNumber}` : 'New work order'}
+        title={editing ? `Rediger ${editing.workOrderNumber}` : 'Ny arbeidsordre'}
         onClose={() => setFormOpen(false)}
       >
         <WorkOrderForm
@@ -216,16 +220,18 @@ export function WorkOrdersPage() {
 
       <ConfirmDialog
         open={deleting !== null}
-        title="Delete work order"
+        title="Slett arbeidsordre"
         message={
           deleting
-            ? `Are you sure you want to delete ${deleting.workOrderNumber} (${deleting.title})? This cannot be undone.`
+            ? `Er du sikker på at du vil slette ${deleting.workOrderNumber} (${deleting.title})? Dette kan ikke angres.`
             : ''
         }
         loading={deleteLoading}
         onConfirm={handleDelete}
         onCancel={() => setDeleting(null)}
       />
+
+      {viewing && <WorkOrderDetail workOrder={viewing} onClose={() => setViewing(null)} />}
     </>
   );
 }

@@ -68,7 +68,7 @@ public class CustomerService {
         if (vehicleRepository.existsByCustomerId(id)) {
             log.info("Rejected deletion of customer {} because they still own vehicles", id);
             throw new InvalidOperationException(
-                    "Customer cannot be deleted while they still own vehicles");
+                    "Kunden kan ikke slettes så lenge den har registrerte kjøretøy");
         }
         customerRepository.delete(customer);
         log.info("Customer {} deleted", id);
@@ -76,6 +76,6 @@ public class CustomerService {
 
     private Customer findCustomerOrThrow(Long id) {
         return customerRepository.findById(id)
-                .orElseThrow(() -> ResourceNotFoundException.of("Customer", id));
+                .orElseThrow(() -> ResourceNotFoundException.of("Kunde", id));
     }
 }

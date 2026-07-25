@@ -1,4 +1,5 @@
 import type { ApiError, ValidationError } from '../types/customer';
+import { tokenStore, UNAUTHORIZED_EVENT } from '../auth/token';
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080';
 
@@ -31,12 +32,24 @@ async function parseError(response: Response): Promise<ApiRequestError> {
   }
 }
 
-/** Thin fetch wrapper that adds JSON headers and consistent error handling. */
+/** Thin fetch wrapper that adds JSON headers, the auth token and consistent error handling. */
 export async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> {
-  const response = await fetch(`${BASE_URL}${path}`, {
-    headers: { 'Content-Type': 'application/json' },
-    ...options,
-  });
+  const token = tokenStore.get();
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...(options.headers as Record<string, string> | undefined),
+  };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  const response = await fetch(`${BASE_URL}${path}`, { ...options, headers });
+
+  // A rejected/expired token: drop it and let the app fall back to the login screen.
+  if (response.status === 401) {
+    tokenStore.clear();
+    window.dispatchEvent(new Event(UNAUTHORIZED_EVENT));
+  }
 
   if (!response.ok) {
     throw await parseError(response);

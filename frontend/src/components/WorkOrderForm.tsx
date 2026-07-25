@@ -59,10 +59,10 @@ export function WorkOrderForm({
   const [touched, setTouched] = useState(false);
 
   const clientErrors: Partial<Record<string, string>> = {};
-  if (!values.title.trim()) clientErrors.title = 'Title is required';
-  if (!initial && !vehicleId) clientErrors.vehicleId = 'Please choose a vehicle';
+  if (!values.title.trim()) clientErrors.title = 'Tittel er påkrevd';
+  if (!initial && !vehicleId) clientErrors.vehicleId = 'Velg et kjøretøy';
   if (values.mileageAtArrival && Number(values.mileageAtArrival) < 0) {
-    clientErrors.mileageAtArrival = 'Mileage cannot be negative';
+    clientErrors.mileageAtArrival = 'Kilometerstand kan ikke være negativ';
   }
 
   const errorFor = (field: string): string | undefined => {
@@ -87,7 +87,7 @@ export function WorkOrderForm({
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Select
           id="vehicleId"
-          label="Vehicle"
+          label="Kjøretøy"
           required
           className="sm:col-span-2"
           value={vehicleId}
@@ -95,7 +95,7 @@ export function WorkOrderForm({
           error={errorFor('vehicleId')}
           disabled={Boolean(initial)}
         >
-          <option value="">Select a vehicle...</option>
+          <option value="">Velg et kjøretøy...</option>
           {vehicles.map((v) => (
             <option key={v.id} value={v.id}>
               {v.registrationNumber} — {v.make} {v.model} ({v.customerName})
@@ -105,7 +105,7 @@ export function WorkOrderForm({
 
         <TextField
           id="title"
-          label="Title"
+          label="Tittel"
           required
           className="sm:col-span-2"
           value={values.title}
@@ -115,7 +115,7 @@ export function WorkOrderForm({
 
         <Select
           id="priority"
-          label="Priority"
+          label="Prioritet"
           value={values.priority}
           onChange={(e) => setValues((v) => ({ ...v, priority: e.target.value as WorkOrderPriority }))}
           error={errorFor('priority')}
@@ -128,7 +128,7 @@ export function WorkOrderForm({
         </Select>
         <TextField
           id="mileageAtArrival"
-          label="Mileage at arrival (km)"
+          label="Kilometerstand ved ankomst (km)"
           type="number"
           value={values.mileageAtArrival}
           onChange={set('mileageAtArrival')}
@@ -137,7 +137,7 @@ export function WorkOrderForm({
 
         <TextField
           id="estimatedCompletionDate"
-          label="Estimated completion date"
+          label="Estimert ferdigdato"
           type="date"
           className="sm:col-span-2"
           value={values.estimatedCompletionDate}
@@ -147,7 +147,7 @@ export function WorkOrderForm({
 
         <TextField
           id="customerComplaint"
-          label="Customer complaint"
+          label="Kundens beskrivelse"
           className="sm:col-span-2"
           value={values.customerComplaint}
           onChange={set('customerComplaint')}
@@ -155,7 +155,7 @@ export function WorkOrderForm({
         />
         <TextField
           id="description"
-          label="Description"
+          label="Beskrivelse"
           className="sm:col-span-2"
           value={values.description}
           onChange={set('description')}
@@ -163,7 +163,7 @@ export function WorkOrderForm({
         />
         <TextField
           id="technicianNotes"
-          label="Technician notes"
+          label="Tekniker-notater"
           className="sm:col-span-2"
           value={values.technicianNotes}
           onChange={set('technicianNotes')}
@@ -173,10 +173,10 @@ export function WorkOrderForm({
 
       <div className="mt-6 flex justify-end gap-3">
         <Button type="button" variant="secondary" onClick={onCancel} disabled={submitting}>
-          Cancel
+          Avbryt
         </Button>
         <Button type="submit" loading={submitting}>
-          {initial ? 'Save changes' : 'Create work order'}
+          {initial ? 'Lagre endringer' : 'Opprett arbeidsordre'}
         </Button>
       </div>
     </form>

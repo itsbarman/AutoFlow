@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 /**
@@ -23,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@WithMockUser
 class VehicleControllerIntegrationTest extends PostgresContainerSupport {
 
     @Autowired
@@ -105,7 +107,7 @@ class VehicleControllerIntegrationTest extends PostgresContainerSupport {
         mockMvc.perform(delete("/api/v1/customers/" + customerId))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.message").value(
-                        org.hamcrest.Matchers.containsString("vehicles")));
+                        org.hamcrest.Matchers.containsString("kjøretøy")));
     }
 
     @Test

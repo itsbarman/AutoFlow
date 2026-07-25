@@ -8,12 +8,12 @@ export type FuelType =
 
 /** Human-readable labels for the fuel type enum. */
 export const FUEL_TYPE_LABELS: Record<FuelType, string> = {
-  PETROL: 'Petrol',
+  PETROL: 'Bensin',
   DIESEL: 'Diesel',
-  ELECTRIC: 'Electric',
+  ELECTRIC: 'Elektrisk',
   HYBRID: 'Hybrid',
-  PLUG_IN_HYBRID: 'Plug-in hybrid',
-  OTHER: 'Other',
+  PLUG_IN_HYBRID: 'Ladbar hybrid',
+  OTHER: 'Annet',
 };
 
 /** Shape of a vehicle as returned by the API. */

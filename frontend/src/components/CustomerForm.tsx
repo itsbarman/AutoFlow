@@ -45,11 +45,11 @@ export function CustomerForm({
 
   // Client-side checks that mirror the backend's Jakarta Validation rules.
   const clientErrors: Partial<Record<keyof CustomerInput, string>> = {};
-  if (!values.firstName.trim()) clientErrors.firstName = 'First name is required';
-  if (!values.lastName.trim()) clientErrors.lastName = 'Last name is required';
-  if (!values.phoneNumber.trim()) clientErrors.phoneNumber = 'Phone number is required';
+  if (!values.firstName.trim()) clientErrors.firstName = 'Fornavn er påkrevd';
+  if (!values.lastName.trim()) clientErrors.lastName = 'Etternavn er påkrevd';
+  if (!values.phoneNumber.trim()) clientErrors.phoneNumber = 'Telefonnummer er påkrevd';
   if (values.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email.trim())) {
-    clientErrors.email = 'Enter a valid email address';
+    clientErrors.email = 'Oppgi en gyldig e-postadresse';
   }
 
   const errorFor = (field: keyof CustomerInput): string | undefined => {
@@ -74,7 +74,7 @@ export function CustomerForm({
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <TextField
           id="firstName"
-          label="First name"
+          label="Fornavn"
           required
           value={values.firstName}
           onChange={set('firstName')}
@@ -82,7 +82,7 @@ export function CustomerForm({
         />
         <TextField
           id="lastName"
-          label="Last name"
+          label="Etternavn"
           required
           value={values.lastName}
           onChange={set('lastName')}
@@ -90,7 +90,7 @@ export function CustomerForm({
         />
         <TextField
           id="phoneNumber"
-          label="Phone number"
+          label="Telefonnummer"
           required
           value={values.phoneNumber}
           onChange={set('phoneNumber')}
@@ -98,7 +98,7 @@ export function CustomerForm({
         />
         <TextField
           id="email"
-          label="Email"
+          label="E-post"
           type="email"
           value={values.email}
           onChange={set('email')}
@@ -106,7 +106,7 @@ export function CustomerForm({
         />
         <TextField
           id="address"
-          label="Address"
+          label="Adresse"
           className="sm:col-span-2"
           value={values.address}
           onChange={set('address')}
@@ -114,14 +114,14 @@ export function CustomerForm({
         />
         <TextField
           id="postalCode"
-          label="Postal code"
+          label="Postnummer"
           value={values.postalCode}
           onChange={set('postalCode')}
           error={errorFor('postalCode')}
         />
         <TextField
           id="city"
-          label="City"
+          label="By"
           value={values.city}
           onChange={set('city')}
           error={errorFor('city')}
@@ -130,10 +130,10 @@ export function CustomerForm({
 
       <div className="mt-6 flex justify-end gap-3">
         <Button type="button" variant="secondary" onClick={onCancel} disabled={submitting}>
-          Cancel
+          Avbryt
         </Button>
         <Button type="submit" loading={submitting}>
-          {initial ? 'Save changes' : 'Create customer'}
+          {initial ? 'Lagre endringer' : 'Opprett kunde'}
         </Button>
       </div>
     </form>
