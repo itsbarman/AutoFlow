@@ -1,7 +1,18 @@
 import { apiFetch } from './client';
 import type { Vehicle, VehicleInput } from '../types/vehicle';
+import type { FuelType } from '../types/vehicle';
 
 const VEHICLES_PATH = '/api/v1/vehicles';
+
+export interface VehicleLookupResult {
+  registrationNumber: string;
+  make: string | null;
+  model: string | null;
+  modelYear: number | null;
+  fuelType: FuelType | null;
+  vin: string | null;
+  color: string | null;
+}
 
 /** Convert the string-based form fields into the API's expected JSON payload. */
 function toPayload(input: VehicleInput) {
@@ -21,6 +32,10 @@ function toPayload(input: VehicleInput) {
 export const vehicleApi = {
   list(): Promise<Vehicle[]> {
     return apiFetch<Vehicle[]>(VEHICLES_PATH);
+  },
+
+  lookup(regnr: string): Promise<VehicleLookupResult> {
+    return apiFetch<VehicleLookupResult>(`${VEHICLES_PATH}/lookup?regnr=${encodeURIComponent(regnr)}`);
   },
 
   create(customerId: number, input: VehicleInput): Promise<Vehicle> {

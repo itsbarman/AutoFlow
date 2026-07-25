@@ -47,3 +47,8 @@ autoflow:
     admin:
       username: ${AUTOFLOW_SECURITY_ADMIN_USERNAME:admin}
       password: ${AUTOFLOW_SECURITY_ADMIN_PASSWORD:admin123}
+  vegvesen:
+    # Public Statens Vegvesen registration lookup API (no authentication required).
+    # Replace with the authenticated akfell-datautlevering endpoint when
+    # Maskinporten credentials are available.
+    lookup-url: ${VEGVESEN_LOOKUP_URL:https://kjoretoyoppslag.atlas.vegvesen.no/kjennemerke}

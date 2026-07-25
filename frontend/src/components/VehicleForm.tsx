@@ -5,6 +5,8 @@ import { Button } from './Button';
 import type { Customer } from '../types/customer';
 import { FUEL_TYPE_LABELS, type FuelType, type Vehicle, type VehicleInput } from '../types/vehicle';
 import type { ValidationError } from '../types/customer';
+import { vehicleApi } from '../api/vehicles';
+import { ApiRequestError } from '../api/client';
 
 interface VehicleFormProps {
   initial?: Vehicle | null;
@@ -53,6 +55,9 @@ export function VehicleForm({
   const [values, setValues] = useState<VehicleInput>(initial ? fromVehicle(initial) : emptyInput());
   const [customerId, setCustomerId] = useState<string>(initial ? String(initial.customerId) : '');
   const [touched, setTouched] = useState(false);
+  const [lookupLoading, setLookupLoading] = useState(false);
+  const [lookupError, setLookupError] = useState<string | null>(null);
+  const [lookupSuccess, setLookupSuccess] = useState<string | null>(null);
 
   const clientErrors: Partial<Record<string, string>> = {};
   if (!values.registrationNumber.trim()) clientErrors.registrationNumber = 'Registreringsnummer er påkrevd';
@@ -73,6 +78,44 @@ export function VehicleForm({
 
   const set = (field: keyof VehicleInput) => (e: { target: { value: string } }) =>
     setValues((v) => ({ ...v, [field]: e.target.value }));
+
+  async function handleLookup() {
+    const regnr = values.registrationNumber.trim();
+    if (!regnr) {
+      setLookupError('Fyll inn registreringsnummeret først.');
+      return;
+    }
+    setLookupLoading(true);
+    setLookupError(null);
+    setLookupSuccess(null);
+    try {
+      const data = await vehicleApi.lookup(regnr);
+      const filled: string[] = [];
+      setValues((prev) => {
+        const next = { ...prev };
+        if (data.make) { next.make = data.make; filled.push('merke'); }
+        if (data.model) { next.model = data.model; filled.push('modell'); }
+        if (data.modelYear) { next.modelYear = String(data.modelYear); filled.push('årsmodell'); }
+        if (data.fuelType) { next.fuelType = data.fuelType; filled.push('drivstoff'); }
+        if (data.vin) { next.vin = data.vin; filled.push('VIN'); }
+        if (data.registrationNumber) { next.registrationNumber = data.registrationNumber; }
+        return next;
+      });
+      const summary = filled.length > 0
+        ? `Hentet: ${filled.join(', ')}.`
+        : 'Kjøretøyet ble funnet, men ingen nye felt ble fylt ut.';
+      if (data.color) {
+        setLookupSuccess(`${summary} Farge: ${data.color}.`);
+      } else {
+        setLookupSuccess(summary);
+      }
+    } catch (err) {
+      const msg = err instanceof ApiRequestError ? err.message : 'Kunne ikke hente data fra Vegvesen.';
+      setLookupError(msg);
+    } finally {
+      setLookupLoading(false);
+    }
+  }
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -107,9 +150,54 @@ export function VehicleForm({
           label="Registreringsnummer"
           required
           value={values.registrationNumber}
-          onChange={set('registrationNumber')}
+          onChange={(e) => {
+            set('registrationNumber')(e);
+            setLookupError(null);
+            setLookupSuccess(null);
+          }}
           error={errorFor('registrationNumber')}
         />
+
+        {/* Vegvesen-oppslag */}
+        <div className="flex flex-col justify-end gap-2 sm:col-span-1">
+          <Button
+            type="button"
+            variant="secondary"
+            loading={lookupLoading}
+            onClick={handleLookup}
+            disabled={!values.registrationNumber.trim() || lookupLoading}
+            className="w-full"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width={16}
+              height={16}
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <path d="M21 21l-4.3-4.3" />
+            </svg>
+            Hent data fra regnr
+          </Button>
+        </div>
+
+        {/* Tilbakemelding fra oppslaget */}
+        {lookupError && (
+          <div className="sm:col-span-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+            {lookupError}
+          </div>
+        )}
+        {lookupSuccess && (
+          <div className="sm:col-span-2 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+            ✓ {lookupSuccess}
+          </div>
+        )}
+
         <TextField
           id="vin"
           label="VIN"
