@@ -1,5 +1,7 @@
 # AutoFlow
 
+[![CI](https://github.com/DITT-BRUKERNAVN/AutoFlow/actions/workflows/ci.yml/badge.svg)](https://github.com/DITT-BRUKERNAVN/AutoFlow/actions/workflows/ci.yml)
+
 AutoFlow is a digital workshop system for car repair shops. It will eventually manage
 customers, vehicles, work orders, service history, parts, bookings, employees and
 invoicing data. This repository contains the backend REST API.

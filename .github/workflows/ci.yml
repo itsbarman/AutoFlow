@@ -1,0 +1,45 @@
+name: CI
+
+# Runs on every push and pull request against main.
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      # Compiles main and test sources without running tests, for fast feedback.
+      - name: Compile
+        run: mvn -B clean test-compile
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    # GitHub's ubuntu runners include Docker, so Testcontainers works out of the box.
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Run tests
+        run: mvn -B verify
