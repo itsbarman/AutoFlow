@@ -33,6 +33,9 @@ class VehicleServiceTest {
     @Mock
     private CustomerRepository customerRepository;
 
+    @Mock
+    private com.autoflow.workorder.WorkOrderRepository workOrderRepository;
+
     @Spy
     private VehicleMapper vehicleMapper;
 

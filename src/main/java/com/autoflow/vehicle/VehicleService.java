@@ -8,6 +8,7 @@ import com.autoflow.customer.CustomerRepository;
 import com.autoflow.vehicle.dto.CreateVehicleRequest;
 import com.autoflow.vehicle.dto.UpdateVehicleRequest;
 import com.autoflow.vehicle.dto.VehicleResponse;
+import com.autoflow.workorder.WorkOrderRepository;
 import java.time.Year;
 import java.util.List;
 import org.slf4j.Logger;
@@ -28,13 +29,16 @@ public class VehicleService {
     private final VehicleRepository vehicleRepository;
     private final CustomerRepository customerRepository;
     private final VehicleMapper vehicleMapper;
+    private final WorkOrderRepository workOrderRepository;
 
     public VehicleService(VehicleRepository vehicleRepository,
                           CustomerRepository customerRepository,
-                          VehicleMapper vehicleMapper) {
+                          VehicleMapper vehicleMapper,
+                          WorkOrderRepository workOrderRepository) {
         this.vehicleRepository = vehicleRepository;
         this.customerRepository = customerRepository;
         this.vehicleMapper = vehicleMapper;
+        this.workOrderRepository = workOrderRepository;
     }
 
     public VehicleResponse createVehicle(Long customerId, CreateVehicleRequest request) {
@@ -104,6 +108,13 @@ public class VehicleService {
 
     public void deleteVehicle(Long id) {
         Vehicle vehicle = findVehicleOrThrow(id);
+        // Business data must not disappear implicitly: a vehicle with work orders
+        // cannot be deleted.
+        if (workOrderRepository.existsByVehicleId(id)) {
+            log.info("Rejected deletion of vehicle {} because it still has work orders", id);
+            throw new InvalidOperationException(
+                    "Vehicle cannot be deleted while it still has work orders");
+        }
         vehicleRepository.delete(vehicle);
         log.info("Vehicle {} deleted", id);
     }

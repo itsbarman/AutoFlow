@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
-import { CarIcon, UsersIcon } from './icons';
+import { CarIcon, UsersIcon, WrenchIcon } from './icons';
 
-export type View = 'customers' | 'vehicles';
+export type View = 'customers' | 'vehicles' | 'workorders';
 
 interface LayoutProps {
   view: View;
@@ -12,6 +12,7 @@ interface LayoutProps {
 const tabs: { id: View; label: string; icon: typeof UsersIcon }[] = [
   { id: 'customers', label: 'Customers', icon: UsersIcon },
   { id: 'vehicles', label: 'Vehicles', icon: CarIcon },
+  { id: 'workorders', label: 'Work orders', icon: WrenchIcon },
 ];
 
 /** App shell: top bar with branding and tab navigation. */
